@@ -30,9 +30,24 @@ Servidor padrão em `http://localhost:3001`.
 
 #### Endpoints
 - GET `/` — healthcheck
-- Users: `GET /users`, `GET /users/:id`, `POST /users`, `PUT /users/:id`, `DELETE /users/:id`
-- Products: `GET /products`, `GET /products/:id`, `POST /products`, `PUT /products/:id`, `DELETE /products/:id`
-- Posts: `GET /posts`, `GET /posts/:id`, `POST /posts`, `PUT /posts/:id`, `DELETE /posts/:id`
+- Users: 
+    - `GET /users` 
+    - `GET /users/:id`
+    - `POST /users`
+    - `PUT /users/:id`
+    - `DELETE /users/:id`
+- Products: 
+    - `GET /products`
+    - `GET /products/:id`
+    - `POST /products`
+    - `PUT /products/:id`
+    - `DELETE /products/:id`
+- Posts:
+    - `GET /posts`
+    - `GET /posts/:id`
+    - `POST /posts`
+    - `PUT /posts/:id`
+    - `DELETE /posts/:id`
 
 Dados iniciais em `db.json`. As mutações são in-memory (não persistem no arquivo).
 
