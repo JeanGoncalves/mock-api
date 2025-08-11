@@ -20,7 +20,7 @@ export class ProfessionalController {
     this.professionalService = new ProfessionalService();
   }
 
-  async list(req: Request, res: Response): Promise<void> {
+  list = async (req: Request, res: Response): Promise<void> => {
     try {
       const validationResult = GetProfessionalsQuerySchema.safeParse(req.query);
       
@@ -47,7 +47,7 @@ export class ProfessionalController {
     }
   }
 
-  async getById(req: Request, res: Response): Promise<void> {
+  getById = async (req: Request, res: Response): Promise<void> => {
     try {
       const validationResult = GetProfessionalByIdParamsSchema.safeParse(req.params);
       
@@ -73,7 +73,7 @@ export class ProfessionalController {
     }
   }
 
-  async getWorkingHours(req: Request, res: Response): Promise<void> {
+  getWorkingHours = async (req: Request, res: Response): Promise<void> => {
     try {
       const validationResult = GetWorkingHoursParamsSchema.safeParse(req.params);
       
@@ -99,7 +99,7 @@ export class ProfessionalController {
     }
   }
 
-  async getDiary(req: Request, res: Response): Promise<void> {
+  getDiary = async (req: Request, res: Response): Promise<void> => {
     try {
       const paramsValidation = GetDiaryParamsSchema.safeParse(req.params);
       const queryValidation = GetDiaryQuerySchema.safeParse(req.query);
@@ -136,7 +136,7 @@ export class ProfessionalController {
     }
   }
 
-  async getAvailability(req: Request, res: Response): Promise<void> {
+  getAvailability = async (req: Request, res: Response): Promise<void> => {
     try {
       const paramsValidation = GetAvailabilityParamsSchema.safeParse(req.params);
       const queryValidation = GetAvailabilityQuerySchema.safeParse(req.query);
@@ -173,7 +173,7 @@ export class ProfessionalController {
     }
   }
 
-  async searchNearby(req: Request, res: Response): Promise<void> {
+  searchNearby = async (req: Request, res: Response): Promise<void> => {
     try {
       const validationResult = SearchNearbyQuerySchema.safeParse(req.query);
       
@@ -199,7 +199,7 @@ export class ProfessionalController {
     }
   }
 
-  async getByServiceCategory(req: Request, res: Response): Promise<void> {
+  getByServiceCategory = async (req: Request, res: Response): Promise<void> => {
     try {
       const paramsValidation = GetByServiceCategoryParamsSchema.safeParse(req.params);
       const queryValidation = GetByServiceCategoryQuerySchema.safeParse(req.query);
@@ -231,7 +231,7 @@ export class ProfessionalController {
     }
   }
 
-  private handleError(res: Response, error: unknown): void {
+  private handleError = (res: Response, error: unknown): void => {
     res.status(500).json({ 
       message: "Erro interno do servidor",
       error: error instanceof Error ? error.message : "Unknown error"
