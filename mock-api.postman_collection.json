@@ -1,0 +1,656 @@
+{
+	"info": {
+		"_postman_id": "0bf2fc66-032c-4ee5-81b4-63baa4e12012",
+		"name": "mock-api",
+    "description": "### mock-api\n\nMock API (TypeScript + Express) para desenvolvimento local.\n\n- **Base URL**: `{{baseUrl}}` (montado a partir de `protocol`, `host`, `port`)\n- **Variáveis**: `protocol`, `host`, `port`, `baseUrl`, `userId`, `productId`, `postId`\n\n**Fluxo sugerido**:\n1. Rodar Health Check\n2. Criar recurso (POST) para popular `id`\n3. Executar Update/Delete (usa `collectionVariables`)\n",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "172532"
+	},
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const protocol = pm.collectionVariables.get('protocol') || 'http';",
+          "const host = pm.collectionVariables.get('host') || 'localhost';",
+          "const port = pm.collectionVariables.get('port') || '3001';",
+          "pm.collectionVariables.set('baseUrl', `${protocol}://${host}:${port}`);"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    { "key": "protocol", "value": "http", "type": "string" },
+    { "key": "host", "value": "localhost", "type": "string" },
+    { "key": "port", "value": "3001", "type": "string" },
+    { "key": "baseUrl", "value": "http://localhost:3001", "type": "string" },
+    { "key": "userId", "value": "1", "type": "string" },
+    { "key": "productId", "value": "1", "type": "string" },
+    { "key": "postId", "value": "1", "type": "string" }
+  ],
+			"item": [
+				{
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""],
+          "query": []
+        },
+        "description": "Verifica o status do serviço. Deve retornar { status: 'ok', service: 'mock-api', language: 'typescript' }"
+      },
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+            "type": "text/javascript",
+								"exec": [
+              "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Retorna JSON com status ok', function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.status).to.equal('ok');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] } },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [ { "key": "Content-Type", "value": "application/json" } ],
+          "body": "{\n  \"status\": \"ok\",\n  \"service\": \"mock-api\",\n  \"language\": \"typescript\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "### Users\n\n- **Campos**: `name` (string), `email` (string)\n- **Validações**:\n  - POST/PUT exigem `name` e `email` (retorna 400 se ausentes)\n- **Endpoints**:\n  - `GET /users`\n  - `GET /users/:id`\n  - `POST /users`\n  - `PUT /users/:id`\n  - `DELETE /users/:id`\n",
+      "item": [
+        {
+          "name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] },
+            "description": "Lista todos os usuários"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Retorna array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "[{\n  \"id\": 1, \"name\": \"Alice\", \"email\": \"alice@example.com\"\n}, {\n  \"id\": 2, \"name\": \"Bob\", \"email\": \"bob@example.com\"\n}]"
+            }
+          ]
+				},
+				{
+					"name": "Get User by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"],
+              "variable": [ { "key": "id", "value": "1" } ]
+            },
+            "description": "Busca um usuário pelo id"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Objeto de usuário', function () { const json = pm.response.json(); pm.expect(json).to.be.an('object'); pm.expect(json).to.have.property('id'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/users/:id", "host": ["{{baseUrl}}"], "path": ["users", ":id"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 1, \n  \"name\": \"Alice\", \n  \"email\": \"alice@example.com\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/users/:id", "host": ["{{baseUrl}}"], "path": ["users", ":id"], "variable": [ {"key":"id","value":"999"} ] } },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"User not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create User",
+					"request": {
+						"method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"User Mock\",\n  \"email\": \"test@mock.com\"\n}" },
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] },
+            "description": "Cria um novo usuário"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('userId', String(json.id));",
+                  "pm.test('Objeto criado possui id, name, email', function () { pm.expect(json).to.have.property('id'); pm.expect(json).to.have.property('name'); pm.expect(json).to.have.property('email'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] }, "body": { "mode": "raw", "raw": "{\n  \"name\": \"User Mock\",\n  \"email\": \"test@mock.com\"\n}" } },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 3,\n  \"name\": \"User Mock\",\n  \"email\": \"test@mock.com\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] }, "body": { "mode": "raw", "raw": "{}" } },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"name and email are required\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"User Mock Updated\",\n  \"email\": \"updated@mock.com\"\n}" },
+						"url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"],
+              "variable": [ { "key": "id", "value": "1" } ]
+            },
+            "description": "Atualiza um usuário existente"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const id = pm.collectionVariables.get('userId');",
+                  "if (id) { pm.request.url.variables.set('id', id); }"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Atualização ok', function () { const json = pm.response.json(); pm.expect(json).to.have.property('id'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/users/:id", "host": ["{{baseUrl}}"], "path": ["users", ":id"], "variable": [ {"key":"id","value":"1"} ] }, "body": { "mode": "raw", "raw": "{\n  \"name\": \"User Mock Updated\",\n  \"email\": \"updated@mock.com\"\n}" } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"User Mock Updated\",\n  \"email\": \"updated@mock.com\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/users/:id", "host": ["{{baseUrl}}"], "path": ["users", ":id"], "variable": [ {"key":"id","value":"999"} ] }, "body": { "mode": "raw", "raw": "{\n  \"name\": \"X\",\n  \"email\": \"x@x.com\"\n}" } },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"User not found\"\n}"
+            }
+          ]
+				},
+				{
+					"name": "Delete User",
+					"request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"],
+              "variable": [ { "key": "id", "value": "1" } ]
+            },
+            "description": "Remove um usuário"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const id = pm.collectionVariables.get('userId');",
+                  "if (id) { pm.request.url.variables.set('id', id); }"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": { "method": "DELETE", "header": [], "url": { "raw": "{{baseUrl}}/users/:id", "host": ["{{baseUrl}}"], "path": ["users", ":id"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+						"header": []
+            }
+          ]
+				}
+			]
+		},
+		{
+			"name": "Products",
+      "description": "### Products\n\n- **Campos**: `name` (string), `price` (number)\n- **Validações**:\n  - POST/PUT exigem `name` e `price` numérico (retorna 400 se ausentes)\n- **Endpoints**:\n  - `GET /products`\n  - `GET /products/:id`\n  - `POST /products`\n  - `PUT /products/:id`\n  - `DELETE /products/:id`\n",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] },
+            "description": "Lista todos os produtos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "type": "text/javascript", "exec": [
+                "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                "pm.test('Retorna array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+              ] }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "[{\n  \"id\": 1, \"name\": \"Laptop\", \"price\": 5499.9\n}, {\n  \"id\": 2, \"name\": \"Headphones\", \"price\": 399\n}]"
+            }
+          ]
+        },
+        {
+          "name": "Get Product by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Busca um produto pelo id"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "type": "text/javascript", "exec": [
+                "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                "pm.test('Objeto de produto', function () { const json = pm.response.json(); pm.expect(json).to.be.an('object'); pm.expect(json).to.have.property('id'); });"
+              ] }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 1, \n  \"name\": \"Laptop\", \n  \"price\": 5499.9\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [ {"key":"id","value":"999"} ] } },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"Product not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Mouse\",\n  \"price\": 199.9\n}" },
+            "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] },
+            "description": "Cria um novo produto"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "type": "text/javascript", "exec": [
+                "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+                "const json = pm.response.json(); pm.collectionVariables.set('productId', String(json.id));",
+                "pm.test('Objeto criado possui id, name, price', function () { pm.expect(json).to.have.property('id'); pm.expect(json).to.have.property('name'); pm.expect(json).to.have.property('price'); });"
+              ] }
+            }
+          ],
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] }, "body": { "mode": "raw", "raw": "{\n  \"name\": \"Mouse\",\n  \"price\": 199.9\n}" } },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 3,\n  \"name\": \"Mouse\",\n  \"price\": 199.9\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] }, "body": { "mode": "raw", "raw": "{}" } },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"name and price are required\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Laptop Pro\",\n  \"price\": 6499.0\n}" },
+            "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Atualiza um produto existente"
+          },
+          "event": [
+            { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+              "const id = pm.collectionVariables.get('productId');",
+              "if (id) { pm.request.url.variables.set('id', id); }"
+            ] } },
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+            ] } }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [ {"key":"id","value":"1"} ] }, "body": { "mode": "raw", "raw": "{\n  \"name\": \"Laptop Pro\",\n  \"price\": 6499.0\n}" } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Laptop Pro\",\n  \"price\": 6499\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [ {"key":"id","value":"999"} ] }, "body": { "mode": "raw", "raw": "{\n  \"name\": \"X\",\n  \"price\": 1\n}" } },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"Product not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Remove um produto"
+          },
+          "event": [
+            { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+              "const id = pm.collectionVariables.get('productId');",
+              "if (id) { pm.request.url.variables.set('id', id); }"
+            ] } },
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 204', function () { pm.response.to.have.status(204); });"
+            ] } }
+          ],
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": { "method": "DELETE", "header": [], "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": []
+            }
+          ]
+        }
+      ]
+		},
+		{
+			"name": "Posts",
+      "description": "### Posts\n\n- **Campos**: `title` (string), `body` (string)\n- **Validações**:\n  - POST/PUT exigem `title` e `body` (retorna 400 se ausentes)\n- **Endpoints**:\n  - `GET /posts`\n  - `GET /posts/:id`\n  - `POST /posts`\n  - `PUT /posts/:id`\n  - `DELETE /posts/:id`\n",
+      "item": [
+        {
+          "name": "List Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] },
+            "description": "Lista todos os posts"
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Retorna array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+            ] } }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "[{\n  \"id\": 1, \"title\": \"Hello World\", \"body\": \"My first post\"\n}, {\n  \"id\": 2, \"title\": \"Mock API\", \"body\": \"Testing endpoints\"\n}]"
+            }
+          ]
+        },
+        {
+          "name": "Get Post by id",
+			"request": {
+				"method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts", ":id"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Busca um post pelo id"
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Objeto de post', function () { const json = pm.response.json(); pm.expect(json).to.be.an('object'); pm.expect(json).to.have.property('id'); });"
+            ] } }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts", ":id"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 1, \n  \"title\": \"Hello World\", \n  \"body\": \"My first post\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts", ":id"], "variable": [ {"key":"id","value":"999"} ] } },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"Post not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"New Post\",\n  \"body\": \"Body content\"\n}" },
+            "url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] },
+            "description": "Cria um novo post"
+          },
+          "event": [
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+              "const json = pm.response.json(); pm.collectionVariables.set('postId', String(json.id));",
+              "pm.test('Objeto criado possui id, title, body', function () { pm.expect(json).to.have.property('id'); pm.expect(json).to.have.property('title'); pm.expect(json).to.have.property('body'); });"
+            ] } }
+          ],
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] }, "body": { "mode": "raw", "raw": "{\n  \"title\": \"New Post\",\n  \"body\": \"Body content\"\n}" } },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 3,\n  \"title\": \"New Post\",\n  \"body\": \"Body content\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] }, "body": { "mode": "raw", "raw": "{}" } },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"title and body are required\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated Post\",\n  \"body\": \"Updated body\"\n}" },
+            "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts", ":id"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Atualiza um post existente"
+          },
+          "event": [
+            { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+              "const id = pm.collectionVariables.get('postId');",
+              "if (id) { pm.request.url.variables.set('id', id); }"
+            ] } },
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+            ] } }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts", ":id"], "variable": [ {"key":"id","value":"1"} ] }, "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated Post\",\n  \"body\": \"Updated body\"\n}" } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 1,\n  \"title\": \"Updated Post\",\n  \"body\": \"Updated body\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "originalRequest": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts", ":id"], "variable": [ {"key":"id","value":"999"} ] }, "body": { "mode": "raw", "raw": "{\n  \"title\": \"X\",\n  \"body\": \"Y\"\n}" } },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"message\": \"Post not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts", ":id"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Remove um post"
+          },
+          "event": [
+            { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+              "const id = pm.collectionVariables.get('postId');",
+              "if (id) { pm.request.url.variables.set('id', id); }"
+            ] } },
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('Status 204', function () { pm.response.to.have.status(204); });"
+            ] } }
+          ],
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": { "method": "DELETE", "header": [], "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts", ":id"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+				"header": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
