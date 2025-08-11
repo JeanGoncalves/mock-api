@@ -1,5 +1,5 @@
-import { Professional, ServiceCategory, WorkingDay } from "../types";
-import { loadCollection, findById } from "../routes/utils";
+import { Professional, ServiceCategory, WorkingDay, Identifier } from "../types";
+import { loadCollection, findById, saveToDatabase, updateCollectionInMemory, getNextId } from "../routes/utils";
 
 interface ProfessionalFilters {
   service?: ServiceCategory;
@@ -59,6 +59,34 @@ export class ProfessionalService {
   async getProfessionalById(id: number): Promise<Professional | null> {
     const professionals = loadCollection<Professional>("professionals");
     return findById(professionals, id) || null;
+  }
+
+  async createProfessional(data: Omit<Professional, "id">): Promise<Professional> {
+    const professionals = loadCollection<Professional>("professionals");
+    const newId: Identifier = getNextId(professionals as any);
+    const created: Professional = { id: newId, ...data } as Professional;
+    const updated = [...professionals, created];
+    saveToDatabase({ professionals: updated as any });
+    return created;
+  }
+
+  async updateProfessional(id: number, partial: Partial<Omit<Professional, "id">>): Promise<Professional | null> {
+    const professionals = loadCollection<Professional>("professionals");
+    const existing = findById(professionals, id);
+    if (!existing) return null;
+    const merged = { ...existing, ...partial, id } as Professional;
+    const updated = updateCollectionInMemory(professionals as any, merged as any);
+    saveToDatabase({ professionals: updated as any });
+    return merged;
+  }
+
+  async deleteProfessional(id: number): Promise<boolean> {
+    const professionals = loadCollection<Professional>("professionals");
+    const before = professionals.length;
+    const remaining = professionals.filter(p => p.id !== id);
+    if (remaining.length === before) return false;
+    saveToDatabase({ professionals: remaining as any });
+    return true;
   }
 
   async getWorkingHours(id: number): Promise<any[] | null> {

@@ -12,6 +12,8 @@ import {
   GetByServiceCategoryParamsSchema,
   GetByServiceCategoryQuerySchema,
 } from "../schemas/professionalSchemas";
+import { z } from "zod";
+import { Professional } from "../types";
 
 export class ProfessionalController {
   private professionalService: ProfessionalService;
@@ -231,6 +233,62 @@ export class ProfessionalController {
     }
   }
 
+  create = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const bodySchema = (await import('../schemas/professionalSchemas')).CreateProfessionalBodySchema
+      const validation = bodySchema.safeParse(req.body)
+      if (!validation.success) {
+        res.status(400).json({ message: 'Body inválido', errors: validation.error.issues })
+        return
+      }
+      const created = await this.professionalService.createProfessional(validation.data as Omit<Professional, 'id'>)
+      res.status(201).json(created)
+    } catch (error) {
+      this.handleError(res, error)
+    }
+  }
+
+  update = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const idValidation = z.coerce.number().positive().safeParse(req.params.id)
+      if (!idValidation.success) {
+        res.status(400).json({ message: 'ID inválido' })
+        return
+      }
+      const bodySchema = (await import('../schemas/professionalSchemas')).UpdateProfessionalBodySchema
+      const validation = bodySchema.safeParse(req.body)
+      if (!validation.success) {
+        res.status(400).json({ message: 'Body inválido', errors: validation.error.issues })
+        return
+      }
+      const updated = await this.professionalService.updateProfessional(idValidation.data, validation.data)
+      if (!updated) {
+        res.status(404).json({ message: 'Profissional não encontrado' })
+        return
+      }
+      res.json(updated)
+    } catch (error) {
+      this.handleError(res, error)
+    }
+  }
+
+  delete = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const idValidation = z.coerce.number().positive().safeParse(req.params.id)
+      if (!idValidation.success) {
+        res.status(400).json({ message: 'ID inválido' })
+        return
+      }
+      const ok = await this.professionalService.deleteProfessional(idValidation.data)
+      if (!ok) {
+        res.status(404).json({ message: 'Profissional não encontrado' })
+        return
+      }
+      res.status(204).send()
+    } catch (error) {
+      this.handleError(res, error)
+    }
+  }
   private handleError = (res: Response, error: unknown): void => {
     res.status(500).json({ 
       message: "Erro interno do servidor",

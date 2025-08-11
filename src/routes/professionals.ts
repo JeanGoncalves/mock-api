@@ -11,3 +11,6 @@ professionalsRouter.get("/:id/diary", professionalController.getDiary);
 professionalsRouter.get("/:id/availability", professionalController.getAvailability);
 professionalsRouter.get("/search/nearby", professionalController.searchNearby);
 professionalsRouter.get("/service/:category", professionalController.getByServiceCategory);
+professionalsRouter.post("/", professionalController.create);
+professionalsRouter.put("/:id", professionalController.update);
+professionalsRouter.delete("/:id", professionalController.delete);

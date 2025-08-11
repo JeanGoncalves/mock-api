@@ -29,6 +29,14 @@ const ProfessionalSchema = z.object({
   diary: z.array(DiaryEntrySchema),
 });
 
+const CreateProfessionalBodySchema = ProfessionalSchema.omit({ id: true }).partial({
+  rating: true,
+  reviewCount: true,
+  diary: true,
+});
+
+const UpdateProfessionalBodySchema = CreateProfessionalBodySchema.partial();
+
 const GetProfessionalsQuerySchema = z.object({
   service: z.enum(["beleza", "mecânico", "construção", "limpeza", "outro"]).optional(),
   city: z.string().min(1).optional(),
@@ -88,6 +96,8 @@ export {
   SearchNearbyQuerySchema,
   GetByServiceCategoryParamsSchema,
   GetByServiceCategoryQuerySchema,
+  CreateProfessionalBodySchema,
+  UpdateProfessionalBodySchema,
 };
 
 export type GetProfessionalsQuery = z.infer<typeof GetProfessionalsQuerySchema>;
@@ -100,3 +110,5 @@ export type GetAvailabilityQuery = z.infer<typeof GetAvailabilityQuerySchema>;
 export type SearchNearbyQuery = z.infer<typeof SearchNearbyQuerySchema>;
 export type GetByServiceCategoryParams = z.infer<typeof GetByServiceCategoryParamsSchema>;
 export type GetByServiceCategoryQuery = z.infer<typeof GetByServiceCategoryQuerySchema>;
+export type CreateProfessionalBody = z.infer<typeof CreateProfessionalBodySchema>;
+export type UpdateProfessionalBody = z.infer<typeof UpdateProfessionalBodySchema>;

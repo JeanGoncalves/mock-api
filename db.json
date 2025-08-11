@@ -1,25 +1,56 @@
 {
   "users": [
-    { "id": 1, "name": "Alice", "email": "alice@example.com" },
-    { "id": 2, "name": "Bob", "email": "bob@example.com" }
+    {
+      "id": 1,
+      "name": "Alice",
+      "email": "alice@example.com"
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "email": "bob@example.com"
+    }
   ],
   "products": [
-    { "id": 1, "name": "Laptop", "price": 5499.9 },
-    { "id": 2, "name": "Headphones", "price": 399.0 }
+    {
+      "id": 1,
+      "name": "Laptop",
+      "price": 5499.9
+    },
+    {
+      "id": 2,
+      "name": "Headphones",
+      "price": 399
+    }
   ],
   "posts": [
-    { "id": 1, "title": "Hello World", "body": "My first post" },
-    { "id": 2, "title": "Mock API", "body": "Testing endpoints" }
+    {
+      "id": 1,
+      "title": "Hello World",
+      "body": "My first post"
+    },
+    {
+      "id": 2,
+      "title": "Mock API",
+      "body": "Testing endpoints"
+    }
   ],
   "professionals": [
     {
       "id": 1,
       "name": "Ana Souza",
-      "services": ["beleza", "limpeza", "outro"],
+      "services": [
+        "beleza",
+        "limpeza",
+        "outro"
+      ],
       "basePrice": 80,
       "rating": 4.7,
       "reviewCount": 32,
-      "location": { "lat": -23.5558, "lng": -46.6396 },
+      "location": {
+        "lat": -23.5558,
+        "lng": -46.6396
+      },
       "city": "São Paulo",
       "workingHours": [
         {
@@ -48,11 +79,18 @@
     {
       "id": 2,
       "name": "Carlos Lima",
-      "services": ["mecânico", "construção", "outro"],
+      "services": [
+        "mecânico",
+        "construção",
+        "outro"
+      ],
       "basePrice": 120,
       "rating": 4.5,
       "reviewCount": 18,
-      "location": { "lat": -22.9068, "lng": -43.1729 },
+      "location": {
+        "lat": -22.9068,
+        "lng": -43.1729
+      },
       "city": "Rio de Janeiro",
       "workingHours": [
         {
@@ -81,11 +119,18 @@
     {
       "id": 3,
       "name": "Marcos Pereira",
-      "services": ["mecânico", "construção", "outro"],
+      "services": [
+        "mecânico",
+        "construção",
+        "outro"
+      ],
       "basePrice": 100,
       "rating": 4.2,
       "reviewCount": 12,
-      "location": { "lat": -25.4284, "lng": -49.2733 },
+      "location": {
+        "lat": -25.4284,
+        "lng": -49.2733
+      },
       "city": "Curitiba",
       "workingHours": [
         {
@@ -104,11 +149,18 @@
     {
       "id": 4,
       "name": "Luana Dias",
-      "services": ["beleza", "limpeza", "outro"],
+      "services": [
+        "beleza",
+        "limpeza",
+        "outro"
+      ],
       "basePrice": 150,
       "rating": 4.9,
       "reviewCount": 51,
-      "location": { "lat": -19.9167, "lng": -43.9345 },
+      "location": {
+        "lat": -22.7,
+        "lng": -43
+      },
       "city": "Belo Horizonte",
       "workingHours": [
         {
@@ -123,8 +175,43 @@
           "status": "not-available"
         }
       ]
+    },
+    {
+      "id": 5,
+      "name": "Jean Gonçalves",
+      "services": [
+        "mecânico"
+      ],
+      "basePrice": 129.9,
+      "rating": 4.9,
+      "reviewCount": 51,
+      "location": {
+        "lat": 0,
+        "lng": 0
+      },
+      "city": "Resende",
+      "workingHours": [
+        {
+          "day": "monday",
+          "hours": "08:00-18:00"
+        },
+        {
+          "day": "tuesday",
+          "hours": "08:00-18:00"
+        },
+        {
+          "day": "wednesday",
+          "hours": "08:00-18:00"
+        },
+        {
+          "day": "thursday",
+          "hours": "08:00-18:00"
+        },
+        {
+          "day": "friday",
+          "hours": "08:00-18:00"
+        }
+      ]
     }
   ]
 }
-
-
