@@ -10,6 +10,120 @@
   "posts": [
     { "id": 1, "title": "Hello World", "body": "My first post" },
     { "id": 2, "title": "Mock API", "body": "Testing endpoints" }
+  ],
+  "professionals": [
+    {
+      "id": 1,
+      "name": "Ana Souza",
+      "services": ["beleza", "limpeza", "outro"],
+      "basePrice": 80,
+      "rating": 4.7,
+      "reviewCount": 32,
+      "location": { "lat": -23.5558, "lng": -46.6396 },
+      "city": "São Paulo",
+      "workingHours": [
+        {
+          "day": "monday",
+          "hours": "09:00-18:00"
+        }
+      ],
+      "diary": [
+        {
+          "date": "2025-08-11",
+          "time": "10:00",
+          "status": "not-available"
+        },
+        {
+          "date": "2025-08-12",
+          "time": "10:00",
+          "status": "not-available"
+        },
+        {
+          "date": "2025-08-13",
+          "time": "10:00",
+          "status": "not-available"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Carlos Lima",
+      "services": ["mecânico", "construção", "outro"],
+      "basePrice": 120,
+      "rating": 4.5,
+      "reviewCount": 18,
+      "location": { "lat": -22.9068, "lng": -43.1729 },
+      "city": "Rio de Janeiro",
+      "workingHours": [
+        {
+          "day": "monday",
+          "hours": "09:00-18:00"
+        }
+      ],
+      "diary": [
+        {
+          "date": "2025-08-11",
+          "time": "10:00",
+          "status": "not-available"
+        },
+        {
+          "date": "2025-08-12",
+          "time": "10:00",
+          "status": "not-available"
+        },
+        {
+          "date": "2025-08-13",
+          "time": "10:00",
+          "status": "not-available"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Marcos Pereira",
+      "services": ["mecânico", "construção", "outro"],
+      "basePrice": 100,
+      "rating": 4.2,
+      "reviewCount": 12,
+      "location": { "lat": -25.4284, "lng": -49.2733 },
+      "city": "Curitiba",
+      "workingHours": [
+        {
+          "day": "monday",
+          "hours": "09:00-18:00"
+        }
+      ],
+      "diary": [
+        {
+          "date": "2025-08-11",
+          "time": "10:00",
+          "status": "not-available"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Luana Dias",
+      "services": ["beleza", "limpeza", "outro"],
+      "basePrice": 150,
+      "rating": 4.9,
+      "reviewCount": 51,
+      "location": { "lat": -19.9167, "lng": -43.9345 },
+      "city": "Belo Horizonte",
+      "workingHours": [
+        {
+          "day": "monday",
+          "hours": "09:00-18:00"
+        }
+      ],
+      "diary": [
+        {
+          "date": "2025-08-11",
+          "time": "10:00",
+          "status": "not-available"
+        }
+      ]
+    }
   ]
 }
 

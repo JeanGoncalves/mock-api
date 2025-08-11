@@ -27,7 +27,8 @@
     { "key": "baseUrl", "value": "http://localhost:3001", "type": "string" },
     { "key": "userId", "value": "1", "type": "string" },
     { "key": "productId", "value": "1", "type": "string" },
-    { "key": "postId", "value": "1", "type": "string" }
+    { "key": "postId", "value": "1", "type": "string" },
+    { "key": "professionalId", "value": "1", "type": "string" }
   ],
 			"item": [
 				{
@@ -646,6 +647,266 @@
               "code": 204,
               "_postman_previewlanguage": "json",
 				"header": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Professionals",
+      "description": "### Professionals\n\n- **Campos**: `name`, `services` (array), `basePrice`, `rating`, `reviewCount`, `location`, `city`, `workingHours`, `diary`\n- **Filtros disponíveis**:\n  - `service`: categoria de serviço (beleza, mecânico, construção, limpeza, outro)\n  - `city`: cidade\n  - `minRating`: avaliação mínima\n  - `maxPrice`: preço máximo\n  - `sort`: ordenação (relevance, price, rating)\n- **Endpoints**:\n  - `GET /professionals`\n  - `GET /professionals/:id`\n  - `GET /professionals/:id/working-hours`\n  - `GET /professionals/:id/diary`\n  - `GET /professionals/:id/availability`\n  - `GET /professionals/search/nearby`\n  - `GET /professionals/service/:category`\n",
+      "item": [
+        {
+          "name": "List Professionals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/professionals", "host": ["{{baseUrl}}"], "path": ["professionals"] },
+            "description": "Lista todos os profissionais com filtros opcionais"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Retorna array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/professionals", "host": ["{{baseUrl}}"], "path": ["professionals"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Ana Souza\",\n    \"services\": [\"beleza\", \"limpeza\", \"outro\"],\n    \"basePrice\": 80,\n    \"rating\": 4.7,\n    \"reviewCount\": 32,\n    \"city\": \"São Paulo\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Professional by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/professionals/:id", "host": ["{{baseUrl}}"], "path": ["professionals", ":id"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Busca um profissional pelo id"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Objeto de profissional', function () { const json = pm.response.json(); pm.expect(json).to.be.an('object'); pm.expect(json).to.have.property('id'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/professionals/:id", "host": ["{{baseUrl}}"], "path": ["professionals", ":id"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Ana Souza\",\n  \"services\": [\"beleza\", \"limpeza\", \"outro\"],\n  \"basePrice\": 80,\n  \"rating\": 4.7,\n  \"reviewCount\": 32,\n  \"city\": \"São Paulo\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Working Hours",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/professionals/:id/working-hours", "host": ["{{baseUrl}}"], "path": ["professionals", ":id", "working-hours"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Obtém os horários de trabalho de um profissional"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const id = pm.collectionVariables.get('professionalId');",
+                  "if (id) { pm.request.url.variables.set('id', id); }"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Retorna array de horários', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/professionals/:id/working-hours", "host": ["{{baseUrl}}"], "path": ["professionals", ":id", "working-hours"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "[\n  {\n    \"day\": \"monday\",\n    \"hours\": \"09:00-18:00\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Diary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/professionals/:id/diary", "host": ["{{baseUrl}}"], "path": ["professionals", ":id", "diary"], "variable": [ {"key":"id","value":"1"} ] },
+            "description": "Obtém a agenda de um profissional (opcional: filtrar por data)"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const id = pm.collectionVariables.get('professionalId');",
+                  "if (id) { pm.request.url.variables.set('id', id); }"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Retorna array de entradas da agenda', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/professionals/:id/diary", "host": ["{{baseUrl}}"], "path": ["professionals", ":id", "diary"], "variable": [ {"key":"id","value":"1"} ] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "[\n  {\n    \"date\": \"2025-08-11\",\n    \"time\": \"10:00\",\n    \"status\": \"not-available\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/professionals/:id/availability?date=2025-08-12", "host": ["{{baseUrl}}"], "path": ["professionals", ":id", "availability"], "variable": [ {"key":"id","value":"1"} ], "query": [ {"key":"date","value":"2025-08-12"} ] },
+            "description": "Obtém a disponibilidade de um profissional para uma data específica"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const id = pm.collectionVariables.get('professionalId');",
+                  "if (id) { pm.request.url.variables.set('id', id); }"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Retorna disponibilidade', function () { const json = pm.response.json(); pm.expect(json).to.have.property('date'); pm.expect(json).to.have.property('timeSlots'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/professionals/:id/availability?date=2025-08-12", "host": ["{{baseUrl}}"], "path": ["professionals", ":id", "availability"], "variable": [ {"key":"id","value":"1"} ], "query": [ {"key":"date","value":"2025-08-12"} ] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "{\n  \"date\": \"2025-08-12\",\n  \"workingHours\": \"09:00-18:00\",\n  \"timeSlots\": [\n    {\n      \"time\": \"09:00\",\n      \"status\": \"available\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Search Nearby",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/professionals/search/nearby?lat=-23.5558&lng=-46.6396&radius=10&service=beleza", "host": ["{{baseUrl}}"], "path": ["professionals", "search", "nearby"], "query": [ {"key":"lat","value":"-23.5558"}, {"key":"lng","value":"-46.6396"}, {"key":"radius","value":"10"}, {"key":"service","value":"beleza"} ] },
+            "description": "Busca profissionais por proximidade geográfica"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Retorna array de profissionais próximos', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/professionals/search/nearby?lat=-23.5558&lng=-46.6396&radius=10&service=beleza", "host": ["{{baseUrl}}"], "path": ["professionals", "search", "nearby"], "query": [ {"key":"id","value":"-23.5558"}, {"key":"lng","value":"-46.6396"}, {"key":"radius","value":"10"}, {"key":"service","value":"beleza"} ] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "Content-Type", "value": "application/json" } ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Ana Souza\",\n    \"distance\": 0.0\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get by Service Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/professionals/service/beleza", "host": ["{{baseUrl}}"], "path": ["professionals", "service", "beleza"] },
+            "description": "Busca profissionais por categoria de serviço"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Retorna array de profissionais do serviço', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/professionals/service/beleza", "host": ["{{baseUrl"] }, "path": ["professionals", "service", "beleza"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [ { "key": "text/html" } ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Ana Souza\",\n    \"services\": [\"beleza\", \"limpeza\", \"outro\"]\n  }\n]"
             }
           ]
         }

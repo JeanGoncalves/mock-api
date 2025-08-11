@@ -12,9 +12,10 @@ function loadDatabase(): DatabaseShape {
       users: Array.isArray(parsed.users) ? parsed.users : [],
       products: Array.isArray(parsed.products) ? parsed.products : [],
       posts: Array.isArray(parsed.posts) ? parsed.posts : [],
+      professionals: Array.isArray(parsed.professionals) ? parsed.professionals : [],
     } as DatabaseShape;
   } catch (_err) {
-    return { users: [], products: [], posts: [] };
+    return { users: [], products: [], posts: [], professionals: [] };
   }
 }
 

@@ -49,6 +49,15 @@ Servidor padrão em `http://localhost:3001`.
     - `PUT /posts/:id`
     - `DELETE /posts/:id`
 
+- Professionals (rotas dedicadas para profissionais):
+    - `GET /professionals` (query: `service`, `city`, `minRating`, `maxPrice`, `sort`)
+    - `GET /professionals/:id`
+    - `GET /professionals/:id/working-hours`
+    - `GET /professionals/:id/diary` (query: `date` opcional)
+    - `GET /professionals/:id/availability` (query: `date` obrigatório YYYY-MM-DD)
+    - `GET /professionals/search/nearby` (query: `lat`, `lng`, `radius`, `service`)
+    - `GET /professionals/service/:category` (query: `city` opcional)
+
 Dados iniciais em `db.json`. As mutações são in-memory (não persistem no arquivo).
 
 

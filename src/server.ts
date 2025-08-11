@@ -3,6 +3,7 @@ import cors from "cors";
 import { usersRouter } from "./routes/users";
 import { productsRouter } from "./routes/products";
 import { postsRouter } from "./routes/posts";
+import { professionalsRouter } from "./routes/professionals";
 
 export const app = express();
 
@@ -16,5 +17,6 @@ app.get("/", (_req, res) => {
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
 app.use("/posts", postsRouter);
+app.use("/professionals", professionalsRouter);
 
 
