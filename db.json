@@ -1,0 +1,16 @@
+{
+  "users": [
+    { "id": 1, "name": "Alice", "email": "alice@example.com" },
+    { "id": 2, "name": "Bob", "email": "bob@example.com" }
+  ],
+  "products": [
+    { "id": 1, "name": "Laptop", "price": 5499.9 },
+    { "id": 2, "name": "Headphones", "price": 399.0 }
+  ],
+  "posts": [
+    { "id": 1, "title": "Hello World", "body": "My first post" },
+    { "id": 2, "title": "Mock API", "body": "Testing endpoints" }
+  ]
+}
+
+
